@@ -1,4 +1,4 @@
-;For start: csc .all.scm
+;For start: csc .all.scm; ln -s .all new; ln -s .all add2; ln -s .all last2
 (import 
 	(chicken io) (chicken file) (chicken sort) (chicken time) (chicken file)
 	(chicken string) (chicken irregex) (chicken time posix) (chicken process-context) 
