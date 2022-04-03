@@ -16,18 +16,18 @@
 
 ;commands
 (define comms '())
-(define (appcomm name narg comm) (set! comms (cons (list name narg comm) comms))) 
+(define (appcomm name comm) (set! comms (cons (cons name comm) comms))) 
 
 (define (new-rec) 
 	(process-execute (get-environment-variable "EDITOR") (list (home (current-seconds)))))
-(appcomm "new" 0 new-rec) 
+(appcomm "more" new-rec) 
 (define (app-file2 cat file) 
 	(let ((patha (string-append (current-directory) "/" file)) (pathb (home (rmpath file))))
 		(unless (string=? patha pathb) (copy-file patha pathb)))
 	(append2file (rmpath file) (home cat)))
-(appcomm "app2" 2 app-file2) 
+(appcomm "col" app-file2) 
 (define (app-last2 cat) (append2file (car (last-rec 1)) (home cat)))
-(appcomm "last2" 1 app-last2)
+(appcomm "last" app-last2)
 
 ;web veiewer with colors and hiper links for other devices (like phone) in local network
 (define styles #<<CSS
@@ -115,13 +115,7 @@ CSS
 
 ;main
 (define (main)
-	(let*((args (argv))
-				(cargs (cdr args)) 
-				(cargn (length cargs))
-				(cname (rmpath (car args)))
-				(comm (assoc cname comms)))
-		(if comm (begin
-			(unless (= (cadr comm) cargn) (begin (print "extented " (cadr comm) " args") (exit)))
-				(apply (caddr comm) cargs))
-			(web-server))))
+	(define Com (assoc (cadr (argv)) comms))
+	(if Com (apply (cdr Com) (cddr (argv))) (web-server)))
+
 (main)
